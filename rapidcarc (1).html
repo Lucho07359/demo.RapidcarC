@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RapidCarC — Atelier de débosselage et carrosserie | Gatineau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noir: #131417;
+    --panneau: #1c1e24;
+    --panneau-clair: #262931;
+    --blanc-casse: #f2f0ea;
+    --gris-acier: #9aa1ab;
+    --gris-fonce: #565b64;
+    --rouge: #c5281c;
+    --rouge-fonce: #8f1c14;
+    --rouge-vif: #e6392a;
+    --ligne: rgba(242,240,234,0.09);
+    --angle: 3.4deg;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--noir);
+    color:var(--blanc-casse);
+    font-family:'Work Sans',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.chiffre,.logo-word{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    letter-spacing:0.01em;
+    line-height:1.02;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .conteneur{max-width:1180px;margin:0 auto;padding:0 32px;}
+  @media(max-width:640px){.conteneur{padding:0 20px;}}
+
+  /* focus visible pour accessibilité */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--rouge-vif); outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ===== EN-TÊTE ===== */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(19,20,23,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--ligne);
+  }
+  .barre-entete{
+    display:flex; align-items:center; justify-content:space-between;
+    height:74px;
+  }
+  .logo{display:flex; align-items:center; gap:10px;}
+  .logo-marque{width:30px;height:30px;flex-shrink:0;}
+  .logo-word{font-size:26px; color:var(--blanc-casse);}
+  .logo-word span{color:var(--rouge-vif);}
+  nav.liens{display:flex; gap:34px; align-items:center;}
+  nav.liens a{
+    font-size:15px; color:var(--gris-acier); transition:color .2s ease;
+    padding:6px 0;
+  }
+  nav.liens a:hover{color:var(--blanc-casse);}
+  .tel-entete{
+    display:flex; align-items:center; gap:9px;
+    border:1px solid var(--ligne);
+    padding:9px 18px;
+    color:var(--blanc-casse);
+    font-weight:600; font-size:15px;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .tel-entete:hover{border-color:var(--rouge); background:var(--panneau);}
+  .tel-entete svg{width:16px;height:16px;stroke:var(--rouge-vif);flex-shrink:0;}
+  .actions-entete{display:flex; align-items:center; gap:14px;}
+  .btn-mini{
+    display:inline-flex; align-items:center;
+    padding:10px 20px; font-size:14.5px; font-weight:600;
+    background:var(--rouge); color:var(--blanc-casse);
+    border:1px solid var(--rouge); cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+    transition:background .2s ease;
+  }
+  .btn-mini:hover{background:var(--rouge-vif);}
+  @media(max-width:860px){ nav.liens{display:none;} }
+  @media(max-width:520px){ .btn-mini{padding:9px 14px; font-size:13.5px;} .tel-entete{display:none;} }
+
+  /* ===== HÉRO ===== */
+  .hero{
+    position:relative;
+    padding:168px 0 130px;
+    background:
+      linear-gradient(122deg, rgba(19,20,23,0.94) 0%, rgba(19,20,23,0.82) 46%, rgba(28,30,36,0.55) 100%),
+      radial-gradient(ellipse 900px 500px at 82% 12%, rgba(197,40,28,0.22), transparent 60%),
+      repeating-linear-gradient(115deg, #191a1f 0px, #191a1f 2px, #16171b 2px, #16171b 68px);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 64px), 0 100%);
+  }
+  .badge-avis{
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--ligne);
+    padding:8px 16px 8px 12px;
+    font-size:14px; color:var(--gris-acier);
+    margin-bottom:34px;
+    background:rgba(255,255,255,0.02);
+  }
+  .badge-avis .etoiles{color:var(--rouge-vif); letter-spacing:2px; font-size:13px;}
+  .badge-avis strong{color:var(--blanc-casse);}
+  .hero h1{
+    font-size:clamp(46px, 6.6vw, 86px);
+    max-width:900px;
+    color:var(--blanc-casse);
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--rouge-vif);
+  }
+  .hero p.lead{
+    font-size:19px;
+    color:var(--gris-acier);
+    max-width:540px;
+    margin-top:26px;
+  }
+  .cta-groupe{display:flex; gap:16px; margin-top:44px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:16px 30px;
+    font-size:15px; font-weight:600;
+    cursor:pointer; border:1px solid transparent;
+    transition:transform .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .btn-primaire{background:var(--rouge); color:var(--blanc-casse);}
+  .btn-primaire:hover{background:var(--rouge-vif); transform:translateY(-2px);}
+  .btn-secondaire{border-color:var(--ligne); color:var(--blanc-casse);}
+  .btn-secondaire:hover{border-color:var(--gris-acier); transform:translateY(-2px);}
+
+  /* ===== BANDE STATS ===== */
+  .bande-stats{
+    background:var(--rouge);
+    padding:30px 0;
+    margin-top:-64px;
+    position:relative; z-index:2;
+  }
+  .stats-grille{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:20px; text-align:center;
+  }
+  .stats-grille div .chiffre{font-size:38px; color:var(--blanc-casse);}
+  .stats-grille div .etiquette{font-size:13.5px; color:rgba(242,240,234,0.82); margin-top:2px;}
+  @media(max-width:760px){ .stats-grille{grid-template-columns:repeat(2,1fr); row-gap:26px;} }
+
+  /* ===== SECTIONS GÉNÉRALES ===== */
+  section{padding:120px 0;}
+  .entete-section{max-width:640px; margin-bottom:64px;}
+  .surtitre{
+    font-size:14px; color:var(--rouge-vif); font-weight:600;
+    margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .surtitre::before{content:""; width:22px; height:2px; background:var(--rouge-vif); display:block;}
+  .entete-section h2{font-size:clamp(32px,4vw,46px); color:var(--blanc-casse);}
+  .entete-section p{color:var(--gris-acier); font-size:16.5px; margin-top:16px;}
+
+  /* ===== POURQUOI NOUS ===== */
+  .pourquoi{
+    background:var(--panneau);
+    display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;
+  }
+  .pourquoi-visuel{
+    aspect-ratio:4/5;
+    background:
+      linear-gradient(160deg, rgba(197,40,28,0.16), transparent 55%),
+      repeating-linear-gradient(120deg, #22242b 0px, #22242b 2px, #1b1d23 2px, #1b1d23 46px);
+    border:1px solid var(--ligne);
+    position:relative;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 92%);
+    display:flex; align-items:flex-end; padding:36px;
+  }
+  .pourquoi-visuel .citation{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:30px;
+    color:var(--blanc-casse);
+    line-height:1.12;
+  }
+  .liste-pourquoi{list-style:none;}
+  .liste-pourquoi li{
+    display:flex; gap:18px; padding:22px 0;
+    border-top:1px solid var(--ligne);
+  }
+  .liste-pourquoi li:last-child{border-bottom:1px solid var(--ligne);}
+  .liste-pourquoi svg{width:20px;height:20px;stroke:var(--rouge-vif);fill:none;stroke-width:2;flex-shrink:0; margin-top:3px;}
+  .liste-pourquoi h3{font-size:18px; font-weight:600; color:var(--blanc-casse); margin-bottom:5px;}
+  .liste-pourquoi p{font-size:14.5px; color:var(--gris-acier);}
+  @media(max-width:900px){ .pourquoi{grid-template-columns:1fr; gap:44px;} .pourquoi-visuel{aspect-ratio:16/9;} }
+
+  /* ===== TÉMOIGNAGES ===== */
+  .temoignages-entete{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:56px; flex-wrap:wrap; gap:20px;}
+  .grille-temoin{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .fiche-temoin{
+    border:1px solid var(--ligne);
+    padding:32px 28px;
+    background:var(--panneau);
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .fiche-temoin .etoiles-t{color:var(--rouge-vif); font-size:14px; letter-spacing:2px;}
+  .fiche-temoin p.texte{font-size:15.5px; color:var(--blanc-casse); flex-grow:1;}
+  .fiche-temoin .auteur{display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--ligne); padding-top:16px;}
+  .fiche-temoin .auteur strong{font-size:14.5px; color:var(--blanc-casse); font-weight:600;}
+  .fiche-temoin .auteur span{font-size:13px; color:var(--gris-acier);}
+  @media(max-width:920px){ .grille-temoin{grid-template-columns:1fr 1fr;} }
+  @media(max-width:620px){ .grille-temoin{grid-template-columns:1fr;} }
+
+  /* ===== CONTACT / LOCALISATION ===== */
+  .contact{
+    background:
+      linear-gradient(120deg, rgba(19,20,23,0.95), rgba(19,20,23,0.88)),
+      radial-gradient(ellipse 700px 400px at 12% 90%, rgba(197,40,28,0.18), transparent 60%);
+  }
+  .grille-contact{display:grid; grid-template-columns:1.05fr 0.95fr; gap:0; border:1px solid var(--ligne);}
+  .bloc-infos{padding:56px; background:var(--panneau);}
+  .bloc-infos h2{font-size:34px; color:var(--blanc-casse); margin-bottom:8px;}
+  .bloc-infos > p{color:var(--gris-acier); margin-bottom:36px;}
+  .ligne-info{display:flex; gap:16px; padding:18px 0; border-top:1px solid var(--ligne);}
+  .ligne-info:last-of-type{border-bottom:1px solid var(--ligne); margin-bottom:32px;}
+  .ligne-info svg{width:19px;height:19px;stroke:var(--rouge-vif);fill:none;stroke-width:1.7;flex-shrink:0; margin-top:2px;}
+  .ligne-info strong{display:block; font-size:15px; color:var(--blanc-casse); font-weight:600;}
+  .ligne-info span, .ligne-info a{font-size:14.5px; color:var(--gris-acier);}
+  .ligne-info a:hover{color:var(--blanc-casse);}
+  table.horaires{width:100%; border-collapse:collapse; font-size:14.5px;}
+  table.horaires td{padding:9px 0; border-top:1px solid var(--ligne); color:var(--gris-acier);}
+  table.horaires td:last-child{text-align:right; color:var(--blanc-casse); font-weight:500;}
+  table.horaires tr.aujourdhui td{color:var(--blanc-casse); font-weight:600;}
+  table.horaires tr.aujourdhui td:first-child{color:var(--rouge-vif);}
+  .carte-embed{filter:grayscale(0.55) contrast(1.05) invert(0.92) brightness(0.9); width:100%; height:100%; min-height:420px; border:0;}
+  @media(max-width:900px){ .grille-contact{grid-template-columns:1fr;} .bloc-infos{padding:40px 26px;} .carte-embed{min-height:300px;} }
+
+  /* ===== PIED DE PAGE ===== */
+  footer{border-top:1px solid var(--ligne); padding:38px 0;}
+  .pied-flex{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .pied-flex p{font-size:13.5px; color:var(--gris-fonce);}
+  .pied-flex .liens-pied{display:flex; gap:22px;}
+  .pied-flex .liens-pied a{font-size:13.5px; color:var(--gris-acier);}
+  .pied-flex .liens-pied a:hover{color:var(--blanc-casse);}
+
+  /* ===== FENÊTRE — SOUMISSION ===== */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(10,10,12,0.74);
+    backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .modal-overlay.actif{display:flex;}
+  .modal{
+    background:var(--panneau);
+    border:1px solid var(--ligne);
+    border-top:3px solid var(--rouge);
+    width:100%; max-width:460px;
+    max-height:88vh; overflow-y:auto;
+    padding:42px;
+    position:relative;
+  }
+  .modal-fermer{
+    position:absolute; top:16px; right:16px;
+    width:34px; height:34px;
+    background:none; border:none; color:var(--gris-acier);
+    font-size:24px; line-height:1; cursor:pointer;
+  }
+  .modal-fermer:hover{color:var(--blanc-casse);}
+  .modal h2{font-size:29px; color:var(--blanc-casse); margin-bottom:8px;}
+  .modal > p{font-size:14.5px; color:var(--gris-acier); margin-bottom:28px;}
+  .champ{margin-bottom:18px;}
+  .champ label{display:block; font-size:13px; color:var(--gris-acier); margin-bottom:7px; font-weight:500;}
+  .champ input, .champ textarea{
+    width:100%; background:var(--noir);
+    border:1px solid var(--ligne); color:var(--blanc-casse);
+    padding:12px 14px; font-family:'Work Sans',sans-serif; font-size:14.5px;
+  }
+  .champ input:focus, .champ textarea:focus{outline:none; border-color:var(--rouge-vif);}
+  .champ textarea{resize:vertical; min-height:96px; line-height:1.5;}
+  .modal form .btn-primaire{width:100%; justify-content:center; border:none; margin-top:6px;}
+  .note-modal{font-size:12.5px; color:var(--gris-fonce); margin-top:16px; text-align:center; line-height:1.5;}
+  @media(max-width:520px){ .modal{padding:30px 24px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="conteneur barre-entete">
+    <a href="#" class="logo">
+      <svg class="logo-marque" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 20L6 11C6.8 9 8.3 8 10.5 8H19.5C21.7 8 23.2 9 24 11L28 20" stroke="#e6392a" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M2 20V22.5C2 23.3 2.7 24 3.5 24H6.5C7.3 24 8 23.3 8 22.5V20" stroke="#f2f0ea" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M22 20V22.5C22 23.3 22.7 24 23.5 24H26.5C27.3 24 28 23.3 28 22.5V20" stroke="#f2f0ea" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="2" y1="20" x2="28" y2="20" stroke="#f2f0ea" stroke-width="2"/>
+        <circle cx="9" cy="20" r="2" stroke="#f2f0ea" stroke-width="1.6"/>
+        <circle cx="21" cy="20" r="2" stroke="#f2f0ea" stroke-width="1.6"/>
+      </svg>
+      <span class="logo-word">Rapid<span>Car</span>C</span>
+    </a>
+    <nav class="liens">
+      <a href="#avis">Avis clients</a>
+      <a href="#contact">Nous joindre</a>
+    </nav>
+    <div class="actions-entete">
+      <button class="btn-mini" onclick="ouvrirModal()">Demander une soumission</button>
+      <a class="tel-entete" href="tel:18193288314">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5C3 14.4 10.6 22 20 22C20.6 22 21 21.6 21 21V17.5C21 16.9 20.6 16.5 20 16.4L16.5 15.7C16 15.6 15.5 15.8 15.2 16.1L13.7 17.6C11.2 16.3 9.1 14.2 7.8 11.7L9.3 10.2C9.6 9.9 9.8 9.4 9.7 8.9L9 5.4C8.9 4.8 8.5 4.4 7.9 4.4H4.4C3.8 4.4 3.4 4.8 3.4 5.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        (819) 328-8314
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== HÉRO ===== -->
+  <section class="hero">
+    <div class="conteneur">
+      <div class="badge-avis">
+        <span class="etoiles">★★★★★</span>
+        <span><strong>5,0</strong> sur Google — 11 avis vérifiés</span>
+      </div>
+      <h1>La rouille et les bosses n'ont plus <em>leur place</em> sur votre carrosserie.</h1>
+      <p class="lead">Atelier de débosselage, réparation de rouille et peinture automobile à Gatineau — dessert aussi la région d'Ottawa. Un travail soigné, livré rapidement, à un prix qui reste honnête.</p>
+      <div class="cta-groupe">
+        <button class="btn btn-primaire" onclick="ouvrirModal()">Demander une soumission</button>
+        <a href="tel:18193288314" class="btn btn-secondaire">Appeler l'atelier</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="bande-stats">
+    <div class="conteneur stats-grille">
+      <div><div class="chiffre">5,0 / 5</div><div class="etiquette">Note moyenne Google</div></div>
+      <div><div class="chiffre">11</div><div class="etiquette">Avis clients publiés</div></div>
+      <div><div class="chiffre">9,8 K</div><div class="etiquette">Abonnés Facebook</div></div>
+      <div><div class="chiffre">Gatineau</div><div class="etiquette">310 rue Notre-Dame</div></div>
+    </div>
+  </div>
+
+  <!-- ===== POURQUOI NOUS ===== -->
+  <section class="pourquoi">
+    <div class="conteneur" style="display:contents;">
+      <div class="pourquoi-visuel">
+        <p class="citation">« Le travail a été fait proprement, rapidement et avec sérieux. »</p>
+      </div>
+      <div>
+        <div class="surtitre">Pourquoi nos clients reviennent</div>
+        <h2 style="font-size:34px; margin-bottom:30px;">Ce qui ressort, avis après avis</h2>
+        <ul class="liste-pourquoi">
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><h3>Souci du détail</h3><p>Une finition soignée, remarquée même sur les réparations les plus étendues.</p></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><h3>Rapidité réelle</h3><p>Des délais courts, utiles quand un retour de location ou une assurance presse le temps.</p></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><h3>Prix honnête</h3><p>Des soumissions compétitives, sans surprise à la remise des clés.</p></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TÉMOIGNAGES ===== -->
+  <section id="avis" style="background:var(--panneau);">
+    <div class="conteneur">
+      <div class="temoignages-entete">
+        <div class="entete-section" style="margin-bottom:0;">
+          <div class="surtitre">Avis clients</div>
+          <h2>Ce que disent les gens qui nous ont confié leur véhicule</h2>
+        </div>
+      </div>
+      <div class="grille-temoin">
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« La carrosserie complète de mon camion, rongée par la rouille, a retrouvé son état d'origine. Un travail impeccable, avec un vrai souci du détail. »</p>
+          <div class="auteur"><strong>Denis C.</strong><span>Réparation de rouille</span></div>
+        </div>
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« Véhicule accidenté à deux endroits, réparé avant mon retour de location. Prix très compétitif et rapide — ça m'a fait sauver environ 3000 $. »</p>
+          <div class="auteur"><strong>Jonathan D.</strong><span>Réparation post-accident</span></div>
+        </div>
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« Travail fait proprement, rapidement et avec sérieux. Le résultat est exactement conforme à ce qui avait été annoncé. »</p>
+          <div class="auteur"><strong>Evans M.</strong><span>Débosselage</span></div>
+        </div>
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« Travail bien fait, ponctualité au rendez-vous, et un prix qui m'a semblé tout à fait juste. Je recommande sans hésiter. »</p>
+          <div class="auteur"><strong>Miguel L.</strong><span>Débosselage</span></div>
+        </div>
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« Très compétents et très rapides — pas plus de 3 jours pour réaliser un travail. Je les recommande vivement. »</p>
+          <div class="auteur"><strong>Gera B.</strong><span>Délai de réparation</span></div>
+        </div>
+        <div class="fiche-temoin">
+          <span class="etoiles-t">★★★★★</span>
+          <p class="texte">« Qualité, service et prix justes. J'ai vraiment aimé le travail fait sur mon véhicule — je le recommande sans réserve. »</p>
+          <div class="auteur"><strong>Ghassen O.</strong><span>Carrosserie</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="conteneur">
+      <div class="grille-contact">
+        <div class="bloc-infos">
+          <h2>Passez nous voir</h2>
+          <p>Au 310 rue Notre-Dame, à Gatineau.</p>
+
+          <div class="ligne-info">
+            <svg viewBox="0 0 24 24"><path d="M12 21C12 21 5 14.5 5 9.5C5 5.9 8.1 3 12 3C15.9 3 19 5.9 19 9.5C19 14.5 12 21 12 21Z" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <div><strong>Adresse</strong><a href="https://maps.google.com/?q=310+Rue+Notre+Dame,+Gatineau,+QC+J8P+1L1" target="_blank" rel="noopener">310 rue Notre-Dame, Gatineau, QC J8P 1L1</a></div>
+          </div>
+          <div class="ligne-info">
+            <svg viewBox="0 0 24 24"><path d="M3 5C3 14.4 10.6 22 20 22C20.6 22 21 21.6 21 21V17.5C21 16.9 20.6 16.5 20 16.4L16.5 15.7C16 15.6 15.5 15.8 15.2 16.1L13.7 17.6C11.2 16.3 9.1 14.2 7.8 11.7L9.3 10.2C9.6 9.9 9.8 9.4 9.7 8.9L9 5.4C8.9 4.8 8.5 4.4 7.9 4.4H4.4C3.8 4.4 3.4 4.8 3.4 5.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><strong>Téléphone</strong><a href="tel:18193288314">(819) 328-8314</a></div>
+          </div>
+          <div class="ligne-info">
+            <svg viewBox="0 0 24 24"><path d="M3 6L12 13L21 6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
+            <div><strong>Courriel</strong><a href="mailto:contact@rapidcarrosserie.co">contact@rapidcarrosserie.co</a></div>
+          </div>
+          <div class="ligne-info">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="1"/><path d="M3 9H21" /><path d="M8 2V6" stroke-linecap="round"/><path d="M16 2V6" stroke-linecap="round"/></svg>
+            <div><strong>Facebook</strong><a href="https://www.facebook.com/RapidcarC" target="_blank" rel="noopener">facebook.com/RapidcarC — 9,8 K abonnés</a></div>
+          </div>
+
+          <table class="horaires">
+            <tr><td>Lundi</td><td>9h00 – 16h00</td></tr>
+            <tr><td>Mardi</td><td>9h00 – 16h00</td></tr>
+            <tr><td>Mercredi</td><td>9h00 – 16h00</td></tr>
+            <tr class="aujourdhui"><td>Jeudi</td><td>9h00 – 16h00</td></tr>
+            <tr><td>Vendredi</td><td>9h00 – 16h00</td></tr>
+            <tr><td>Samedi</td><td>8h00 – 14h00</td></tr>
+            <tr><td>Dimanche</td><td>Fermé</td></tr>
+          </table>
+        </div>
+        <iframe class="carte-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=310+Rue+Notre+Dame,+Gatineau,+QC+J8P+1L1&output=embed">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="conteneur pied-flex">
+    <p>© 2026 RapidCarC — Atelier de débosselage, Gatineau QC</p>
+    <div class="liens-pied">
+      <a href="tel:18193288314">(819) 328-8314</a>
+      <a href="https://www.facebook.com/RapidcarC" target="_blank" rel="noopener">Facebook</a>
+      <a href="#contact">310 rue Notre-Dame</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== FENÊTRE — DEMANDE DE SOUMISSION ===== -->
+<div class="modal-overlay" id="modal-soumission" onclick="fermerModalClic(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titre-modal">
+    <button class="modal-fermer" onclick="fermerModal()" aria-label="Fermer la fenêtre">×</button>
+    <h2 id="titre-modal">Demander une soumission</h2>
+    <p>Décrivez votre véhicule et les dommages — l'atelier vous revient avec un prix.</p>
+    <form id="form-soumission" onsubmit="envoyerSoumission(event)">
+      <div class="champ">
+        <label for="nom">Nom complet</label>
+        <input type="text" id="nom" name="nom" required>
+      </div>
+      <div class="champ">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" name="telephone" required>
+      </div>
+      <div class="champ">
+        <label for="courriel">Courriel</label>
+        <input type="email" id="courriel" name="courriel">
+      </div>
+      <div class="champ">
+        <label for="details">Véhicule et dommages à réparer</label>
+        <textarea id="details" name="details" required placeholder="Ex. : Toyota Corolla 2018, bosse sur la portière avant droite et rouille sur le bas de caisse."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primaire">Envoyer la demande</button>
+      <p class="note-modal">L'envoi ouvre votre application courriel avec les détails déjà remplis, à destination de contact@rapidcarrosserie.co</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  function ouvrirModal(){
+    document.getElementById('modal-soumission').classList.add('actif');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('nom').focus();
+  }
+  function fermerModal(){
+    document.getElementById('modal-soumission').classList.remove('actif');
+    document.body.style.overflow = '';
+  }
+  function fermerModalClic(evenement){
+    if(evenement.target.id === 'modal-soumission'){ fermerModal(); }
+  }
+  document.addEventListener('keydown', function(evenement){
+    if(evenement.key === 'Escape'){ fermerModal(); }
+  });
+  function envoyerSoumission(evenement){
+    evenement.preventDefault();
+    const nom = document.getElementById('nom').value;
+    const telephone = document.getElementById('telephone').value;
+    const courriel = document.getElementById('courriel').value;
+    const details = document.getElementById('details').value;
+    const sujet = encodeURIComponent('Demande de soumission — ' + nom);
+    const corps = encodeURIComponent(
+      'Nom : ' + nom + '\n' +
+      'Téléphone : ' + telephone + '\n' +
+      'Courriel : ' + (courriel || 'non fourni') + '\n\n' +
+      'Véhicule et dommages :\n' + details
+    );
+    window.location.href = 'mailto:contact@rapidcarrosserie.co?subject=' + sujet + '&body=' + corps;
+  }
+</script>
+
+</body>
+</html>
